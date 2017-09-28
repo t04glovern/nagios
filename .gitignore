@@ -3,3 +3,5 @@ var/
 share/
 sbin/
 libexec/
+etc/htpasswd.users
+etc/scripts/send_spark_notification.py

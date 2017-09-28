@@ -25,7 +25,7 @@ new_line="allowed_hosts=127.0.0.1,${nagiosip}"
 sed -i "s%$original_line%$new_line%g" /etc/nagios/nrpe.cfg
 
 echo "Installing Nagios NRPE plugin for apt-get update monitoring"
-/usr/bin/apt-get -y install nagios-nrpe-plugin
+#/usr/bin/apt-get -y install nagios-nrpe-plugin
 
 echo "Adding check_apt definition to /etc/nagios/nrpe_local.cfg file"
 grep -q -F 'command[check_apt]=/usr/lib/nagios/plugins/check_apt' /etc/nagios/nrpe_local.cfg || echo 'command[check_apt]=/usr/lib/nagios/plugins/check_apt' >> /etc/nagios/nrpe_local.cfg
