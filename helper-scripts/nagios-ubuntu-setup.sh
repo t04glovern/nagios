@@ -20,9 +20,25 @@ while true; do
 done
 
 echo "Writing ${nagiosip} to allowed_host field in /etc/nagios/nrpe.cfg"
-original_line="allowed_hosts=127.0.0.1"
-new_line="allowed_hosts=127.0.0.1,${nagiosip}"
-sed -i "s%$original_line%$new_line%g" /etc/nagios/nrpe.cfg
+original_line_allowed_hosts="allowed_hosts=127.0.0.1,::1"
+new_line_allowed_hosts="allowed_hosts=127.0.0.1,${nagiosip}"
+sed -i "s%$original_line_allowed_hosts%$new_line_allowed_hosts%g" /etc/nagios/nrpe.cfg
+
+echo "Enabling logging to /var/log/nrpe.log in /etc/nagios/nrpe.cfg"
+original_line_logging="#log_file=/var/log/nrpe.log"
+new_line_logging="log_file=/var/log/nrpe.log"
+sed -i "s%$original_line_logging%$new_line_logging%g" /etc/nagios/nrpe.cfg
+touch /var/log/nrpe.log
+
+echo "Replacing disk command in /etc/nagios/nrpe.cfg"
+original_line_check_disk="command[check_hda1]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/hda1"
+new_line_check_disk="command[check_disk]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /"
+sed -i "s%$original_line_check_disk%$new_line_check_disk%g" /etc/nagios/nrpe.cfg
+
+echo "Disabling SSL in /etc/default/nagios-nrpe-server"
+original_line_ssl="#NRPE_OPTS=\"-n\""
+new_line_ssl="NRPE_OPTS=\"-n\""
+sed -i "s%$original_line_ssl%$new_line_ssl%g" /etc/default/nagios-nrpe-server
 
 echo "Installing Nagios NRPE plugin for apt-get update monitoring"
 #/usr/bin/apt-get -y install nagios-nrpe-plugin
